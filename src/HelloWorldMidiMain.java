@@ -61,8 +61,8 @@ public class HelloWorldMidiMain extends PApplet {
 		player = new MelodyPlayer(this, 100.0f); //bpm
 
 		player.setup();
-		//player.setMelody(pitchGenerator.generate(20) ); //assignments
-		//player.setRhythm(rhythmGenerator.generate(20) ); //assignments
+		player.setMelody(pitchGenerator.generate(20) ); //assignments
+		player.setRhythm(rhythmGenerator.generate(20) ); //assignments
 	}
 
 	public void draw() {
