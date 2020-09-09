@@ -45,7 +45,7 @@ public class HelloWorldMidiMain extends PApplet {
 
 		// returns a url
 		String filePath = getPath("mid/gardel_por.mid");
-		// playMidiFile(filePath);
+		playMidiFile(filePath);
 
 		midiNotes = new MidiFileToNotes(filePath); //creates a new MidiFileToNotes -- reminder -- ALL objects in Java must 
 													//be created with "new". Note how every object is a pointer or reference. Every. single. one.
@@ -66,7 +66,7 @@ public class HelloWorldMidiMain extends PApplet {
 	}
 
 	public void draw() {
-	//	player.play(); //play each note in the sequence -- the player will determine whether is time for a note onset --> uncomment on generator
+	player.play(); //play each note in the sequence -- the player will determine whether is time for a note onset 
 
 		textSize(12);
 		
