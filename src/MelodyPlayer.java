@@ -1,12 +1,11 @@
+
 /*
- * c2017 Courtney Brown 
- * 
+ * Programmer: Sisi Kang
+ * Date: Sep 4
  * Class: MelodyPlayer
  * Description: Sends a melody of midi notes to an external player/midi channel
  * 
  */
- 
-
 import themidibus.*;
 import processing.core.*;
 import java.util.*;

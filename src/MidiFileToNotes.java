@@ -1,6 +1,5 @@
-
-/*
- * c2017 Courtney Brown 
+/* Programmer: Sisi Kang
+ * Date: Sep 4
  * 
  * Class: MidiFileToNotes
  * Description: Uses JMusic to get notes & info from a midi file
