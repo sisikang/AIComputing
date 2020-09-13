@@ -1,6 +1,5 @@
 
 /*
- * Programmer: Sisi Kang
  * Date: Sep 4
  * Class: MelodyPlayer
  * Description: Sends a melody of midi notes to an external player/midi channel

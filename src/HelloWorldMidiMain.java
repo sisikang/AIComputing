@@ -1,5 +1,5 @@
 
-//Programmer: Sisi Kang
+
 //Date: Sep 4
 //Description: project 1
 
@@ -55,14 +55,14 @@ public class HelloWorldMidiMain extends PApplet {
 		midiNotes.setWhichLine(0);
 		
 		//training
-		pitchGenerator.train(midiNotes.getPitchArray());
-		rhythmGenerator.train(midiNotes.getRhythmArray());
+		pitchGenerator.train(midiNotes.getPitchArray()); //train with getPitcher array
+		rhythmGenerator.train(midiNotes.getRhythmArray()); //train with getRhthmArray
 
 		player = new MelodyPlayer(this, 100.0f); //bpm
 
 		player.setup();
-		player.setMelody(pitchGenerator.generate(20) ); //assignments
-		player.setRhythm(rhythmGenerator.generate(20) ); //assignments
+		player.setMelody(pitchGenerator.generate(20) ); //assignments, generating probability on each pitch
+		player.setRhythm(rhythmGenerator.generate(20) ); //assignments, generating probability on each rhythm
 	}
 
 	public void draw() {
@@ -71,7 +71,7 @@ public class HelloWorldMidiMain extends PApplet {
 		textSize(12);
 		
 		fill(0,102, 153);
-		text("Press 1 to start the unit test!", 60, 120);
+		text("Press 1 to start the unit test", 60, 120);
 		text("Press 2 to rest", 60, 150);
 
 	}
@@ -104,16 +104,15 @@ public class HelloWorldMidiMain extends PApplet {
 		MidiFileToNotes midiNotesMary; //read a midi file
 		
 		// returns a url
-				String filePath = getPath("mid/MaryHadALittleLamb.mid");
-				// playMidiFile(filePath);
+		String filePath = getPath("mid/MaryHadALittleLamb.mid");
+		playMidiFile(filePath);
 
-				midiNotesMary = new MidiFileToNotes(filePath); //creates a new MidiFileToNotes -- reminder -- ALL objects in Java must 
-															//be created with "new". Note how every object is a pointer or reference. Every. single. one.
+		midiNotesMary = new MidiFileToNotes(filePath); //creates a new MidiFileToNotes -- reminder -- ALL objects in Java must
+													//be created with "new". Note how every object is a pointer or reference. Every. single. one.
 
 
-				// which line to read in --> this object only reads one line (or ie, voice or ie, one instrument)'s worth of data from the file
-				midiNotesMary.setWhichLine(0);
-		
+		// which line to read in --> this object only reads one line (or ie, voice or ie, one instrument)'s worth of data from the file
+		midiNotesMary.setWhichLine(0);
 		if (key == '2') {
 			player.reset();
 			println("Melody started!");
@@ -122,17 +121,30 @@ public class HelloWorldMidiMain extends PApplet {
 		else if (key == '1')
 		{
 			//run your unit 1
-			ProbabilityGenerator pg = new ProbabilityGenerator();
-			pg.train(midiNotesMary.getPitchArray());
-			printStr(pg);
-			ProbabilityGenerator pg1 = new ProbabilityGenerator();
-			pg1.train(midiNotesMary.getRhythmArray());
-			printStr(pg1);
-
+			ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<>();
+			ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<>();
+			pitchGenerator.train(midiNotesMary.getPitchArray());
+			rhythmGenerator.train(midiNotesMary.getRhythmArray());
+			pitchGenerator.printProbabilityDistribution();
+			rhythmGenerator.printProbabilityDistribution();
+			//run your unit 2
+			System.out.println(pitchGenerator.generate(20));
+			System.out.println(rhythmGenerator.generate(20));
+			//run your unit 3
+			ProbabilityGenerator<Integer> pitchProbDistGen  = new ProbabilityGenerator<>();
+			ProbabilityGenerator<Double> rhythmProbDistGen = new ProbabilityGenerator<>();
+			for (int i=0; i<10000; i++) {
+				ArrayList<Integer> newPitch = pitchGenerator.generate(20);
+				pitchProbDistGen.train(newPitch);
+				ArrayList<Double> newRhythm = rhythmGenerator.generate(20);
+				rhythmProbDistGen.train(newRhythm);
+			}
+			pitchProbDistGen.printProbabilityDistribution();
+			rhythmProbDistGen.printProbabilityDistribution();
 		}
 	}
 	
-	public void printStr(ProbabilityGenerator pg) {
+	public void printProbabilityDistribution(ProbabilityGenerator pg) {
 		System.out.println("-----------Probability Distribution----------------");
 		for (int i=0; i<pg.alphabet.size(); i++) {
 			String s = "Token:" + pg.alphabet.get(i) + "|Probability:" + pg.pro.get(i);
