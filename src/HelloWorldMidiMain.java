@@ -44,7 +44,7 @@ public class HelloWorldMidiMain extends PApplet {
 		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<Double> ();
 
 		// returns a url
-		String filePath = getPath("mid/gardel_por.mid");
+		String filePath = getPath("mid/MaryHadALittleLamb.mid");
 		playMidiFile(filePath);
 
 		midiNotes = new MidiFileToNotes(filePath); //creates a new MidiFileToNotes -- reminder -- ALL objects in Java must 
@@ -73,6 +73,8 @@ public class HelloWorldMidiMain extends PApplet {
 		fill(0,102, 153);
 		text("Press 1 to start the unit test", 60, 120);
 		text("Press 2 to rest", 60, 150);
+		text("Press 3 to Run Unit Test 2", 60, 180);
+		text("Press 4 to Run Unit Test 3", 60, 210);
 
 	}
 
@@ -113,6 +115,11 @@ public class HelloWorldMidiMain extends PApplet {
 
 		// which line to read in --> this object only reads one line (or ie, voice or ie, one instrument)'s worth of data from the file
 		midiNotesMary.setWhichLine(0);
+		
+		ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<>();
+		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<>();
+		pitchGenerator.train(midiNotesMary.getPitchArray());
+		rhythmGenerator.train(midiNotesMary.getRhythmArray());
 		if (key == '2') {
 			player.reset();
 			println("Melody started!");
@@ -121,15 +128,16 @@ public class HelloWorldMidiMain extends PApplet {
 		else if (key == '1')
 		{
 			//run your unit 1
-			ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<>();
-			ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<>();
-			pitchGenerator.train(midiNotesMary.getPitchArray());
-			rhythmGenerator.train(midiNotesMary.getRhythmArray());
 			pitchGenerator.printProbabilityDistribution();
 			rhythmGenerator.printProbabilityDistribution();
+
+
+		} else if (key == '3') {
+			
 			//run your unit 2
 			System.out.println(pitchGenerator.generate(20));
 			System.out.println(rhythmGenerator.generate(20));
+		} else if (key == '4') {
 			//run your unit 3
 			ProbabilityGenerator<Integer> pitchProbDistGen  = new ProbabilityGenerator<>();
 			ProbabilityGenerator<Double> rhythmProbDistGen = new ProbabilityGenerator<>();
@@ -141,14 +149,6 @@ public class HelloWorldMidiMain extends PApplet {
 			}
 			pitchProbDistGen.printProbabilityDistribution();
 			rhythmProbDistGen.printProbabilityDistribution();
-		}
-	}
-	
-	public void printProbabilityDistribution(ProbabilityGenerator pg) {
-		System.out.println("-----------Probability Distribution----------------");
-		for (int i=0; i<pg.alphabet.size(); i++) {
-			String s = "Token:" + pg.alphabet.get(i) + "|Probability:" + pg.pro.get(i);
-			System.out.println(s);
 		}
 	}
 }
