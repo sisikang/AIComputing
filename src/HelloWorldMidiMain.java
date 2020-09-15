@@ -44,8 +44,8 @@ public class HelloWorldMidiMain extends PApplet {
 		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<Double> ();
 
 		// returns a url
-		String filePath = getPath("mid/MaryHadALittleLamb.mid");
-		playMidiFile(filePath);
+		String filePath = getPath("mid/gardel_por.mid");
+		//playMidiFile(filePath);
 
 		midiNotes = new MidiFileToNotes(filePath); //creates a new MidiFileToNotes -- reminder -- ALL objects in Java must 
 													//be created with "new". Note how every object is a pointer or reference. Every. single. one.
@@ -107,7 +107,7 @@ public class HelloWorldMidiMain extends PApplet {
 		
 		// returns a url
 		String filePath = getPath("mid/MaryHadALittleLamb.mid");
-		playMidiFile(filePath);
+		//playMidiFile(filePath);
 
 		midiNotesMary = new MidiFileToNotes(filePath); //creates a new MidiFileToNotes -- reminder -- ALL objects in Java must
 													//be created with "new". Note how every object is a pointer or reference. Every. single. one.
@@ -141,7 +141,7 @@ public class HelloWorldMidiMain extends PApplet {
 			//run your unit 3
 			ProbabilityGenerator<Integer> pitchProbDistGen  = new ProbabilityGenerator<>();
 			ProbabilityGenerator<Double> rhythmProbDistGen = new ProbabilityGenerator<>();
-			for (int i=0; i<10000; i++) {
+			for (int i=0; i<100000; i++) {
 				ArrayList<Integer> newPitch = pitchGenerator.generate(20);
 				pitchProbDistGen.train(newPitch);
 				ArrayList<Double> newRhythm = rhythmGenerator.generate(20);
