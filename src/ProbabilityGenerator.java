@@ -1,5 +1,5 @@
 
-
+//Programmer: Sisi Kang
 //Date: Sep 4
 //Description: Probability generator; project 1
 
