@@ -1,5 +1,4 @@
 
- //Programmer: Sisi Kang
 /* Date: Sep 4
  * 
  * Class: MidiFileToNotes

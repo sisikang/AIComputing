@@ -1,5 +1,4 @@
 
-//Programmer: Sisi Kang
 //Date: Sep 4
 //Description: Probability generator; project 1
 
@@ -12,6 +11,7 @@ public class ProbabilityGenerator<T> {
 	ArrayList<Integer> alphabet_counts; //need to use numbers
 	ArrayList<Double> pro;
 	double[] proArr;
+	
 	
 	ProbabilityGenerator()
 	{

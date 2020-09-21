@@ -1,4 +1,4 @@
-//Programmer: Sisi Kang
+
 /*
  * Date: Sep 4
  * Class: MelodyPlayer
@@ -85,7 +85,7 @@ public class MelodyPlayer {
 		//send a note off to previous note -- TODO: control note-offs on staccato or legato, etc. values
 		if (note_index <= melody.size() && note_index > 0 && play) {
 			outputMidiBus.sendNoteOff(0, (int) melody.get(note_index - 1), 0);
-			System.out.println("note off:" + (note_index - 1)); //TODO: comment out when not debugging or not needed
+			//System.out.println("note off:" + (note_index - 1)); //TODO: comment out when not debugging or not needed
 
 			// don't send anything else if done
 			if (note_index == melody.size())
@@ -96,7 +96,7 @@ public class MelodyPlayer {
 		if (note_index < melody.size() && note_index > -1 && play) {
 
 			outputMidiBus.sendNoteOn(0, (int) melody.get(note_index), vel);
-			System.out.println("note on:" + note_index); //TODO: comment out when not debugging or not needed
+			//System.out.println("note on:" + note_index); //TODO: comment out when not debugging or not needed
 
 			if (hasRhythm)
 				rhythm_multiplier = rhythm.get(note_index);
