@@ -1,6 +1,7 @@
+//Programmer SisiKang
+//Date: Sep 21
+//Description: project 2 generating a melody 
 
-//Date: Sep 4
-//Description: Probability generator; project 1
 
 import java.util.ArrayList;
 
