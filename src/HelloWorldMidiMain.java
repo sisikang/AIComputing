@@ -116,45 +116,63 @@ public class HelloWorldMidiMain extends PApplet {
 		// which line to read in --> this object only reads one line (or ie, voice or ie, one instrument)'s worth of data from the file
 		midiNotesMary.setWhichLine(0);
 
-		MarkovGenerator<Integer> pg = new MarkovGenerator<>();
-		pg.train(midiNotesMary.getPitchArray());
-		for (ArrayList<Integer> list : pg.transitionTable) {
-			System.out.println(list);
+		MarkovGenerator<Integer> melodyGen_pitch  = new MarkovGenerator<>();
+		MarkovGenerator<Integer> ttGen_pitch   = new MarkovGenerator<>();
+		ProbabilityGenerator<Integer> firstNoteGen_pitch = new ProbabilityGenerator<>();
+
+		firstNoteGen_pitch.train(midiNotesMary.getPitchArray());
+		melodyGen_pitch.train(midiNotesMary.getPitchArray());
+		for (int i=0; i<10000; i++) {
+			int initToken = firstNoteGen_pitch.generate();
+			ttGen_pitch.train(melodyGen_pitch.generate(20, initToken));
 		}
-		pg.norm();
-		ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<>();
-		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<>();
-		pitchGenerator.train(midiNotesMary.getPitchArray());
-		rhythmGenerator.train(midiNotesMary.getRhythmArray());
-		if (key == '2') {
-			player.reset();
-			println("Melody started!");
+		ttGen_pitch.norm();
+		
+		MarkovGenerator<Double> melodyGen_rhythm  = new MarkovGenerator<>();
+		MarkovGenerator<Double> ttGen_rhythm   = new MarkovGenerator<>();
+		ProbabilityGenerator<Double> firstNoteGen_rhythm = new ProbabilityGenerator<>();
 
+		firstNoteGen_rhythm.train(midiNotesMary.getRhythmArray());
+		melodyGen_rhythm.train(midiNotesMary.getRhythmArray());
+		//melodyGen_rhythm.norm();
+		for (int i=0; i<10000; i++) {
+			double initToken = firstNoteGen_rhythm.generate();
+			ttGen_rhythm.train(melodyGen_rhythm.generate(20, initToken));
 		}
-		else if (key == '1')
-		{
-			//run your unit 1
-			pitchGenerator.printProbabilityDistribution();
-			rhythmGenerator.printProbabilityDistribution();
-
-
-		} else if (key == '3') {
-
-			//run your unit 2
-			System.out.println(pitchGenerator.generate(20));
-			System.out.println(rhythmGenerator.generate(20));
-		} else if (key == '4') {
-			//run your unit 3
-			ProbabilityGenerator<Integer> pitchProbDistGen  = new ProbabilityGenerator<>();
-			ProbabilityGenerator<Double> rhythmProbDistGen = new ProbabilityGenerator<>();
-			for (int i=0; i<100000; i++) {
-				ArrayList<Integer> newPitch = pitchGenerator.generate(20);
-				pitchProbDistGen.train(newPitch);
-				ArrayList<Double> newRhythm = rhythmGenerator.generate(20);
-				rhythmProbDistGen.train(newRhythm);
-			}
-			pitchProbDistGen.printProbabilityDistribution();
-			rhythmProbDistGen.printProbabilityDistribution();
-		}
+		ttGen_rhythm.norm();
+//		ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<>();
+//		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<>();
+//		pitchGenerator.train(midiNotesMary.getPitchArray());
+//		rhythmGenerator.train(midiNotesMary.getRhythmArray());
+//		if (key == '2') {
+//			player.reset();
+//			println("Melody started!");
+//
+//		}
+//		else if (key == '1')
+//		{
+//			//run your unit 1
+//			pitchGenerator.printProbabilityDistribution();
+//			rhythmGenerator.printProbabilityDistribution();
+//
+//
+//		} else if (key == '3') {
+//
+//			//run your unit 2
+//			System.out.println(pitchGenerator.generate(20));
+//			System.out.println(rhythmGenerator.generate(20));
+//		} else if (key == '4') {
+//			//run your unit 3
+//			ProbabilityGenerator<Integer> pitchProbDistGen  = new ProbabilityGenerator<>();
+//			ProbabilityGenerator<Double> rhythmProbDistGen = new ProbabilityGenerator<>();
+//			for (int i=0; i<100000; i++) {
+//				ArrayList<Integer> newPitch = pitchGenerator.generate(20);
+//				pitchProbDistGen.train(newPitch);
+//				ArrayList<Double> newRhythm = rhythmGenerator.generate(20);
+//				rhythmProbDistGen.train(newRhythm);
+//			}
+//			pitchProbDistGen.printProbabilityDistribution();
+//			rhythmProbDistGen.printProbabilityDistribution();
+//		}
 	}
 }

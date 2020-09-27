@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 
 	ArrayList<ArrayList<Integer>> transitionTable = new ArrayList();
+	T initToken = null;
 
 	MarkovGenerator(){
 		
@@ -15,10 +16,27 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 	}
 
 	
-	T generate() {
-		
+	T generate(T initToken) {
+		//System.out.println("init:" +initToken);
+		int tokenIndex = alphabet.indexOf(initToken);
+		ArrayList<Integer> correct_row = transitionTable.get(tokenIndex);
+		int[] pro = new int[correct_row.size()+1];
+		int sum = 0;
+		for (int i=0; i<correct_row.size(); i++) {
+			sum += correct_row.get(i);
+			pro[i+1] = pro[i] + correct_row.get(i);
+		}
+		int rand = (int) (sum * Math.random());
+		//System.out.println("Sum=" + sum);
+		//System.out.println("rand=" + rand);
 		T newToken = null;
-		//do something here
+		for (int i=0; i<correct_row.size(); i++) {
+			if (rand < pro[i+1]) {
+				newToken = alphabet.get(i);
+				break;
+			}
+		}
+		this.initToken = newToken;
 		return newToken;
 	}
 	
@@ -63,7 +81,11 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 				sum += v;
 			}
 			for (int v : transitionTable.get(i)) {
-				System.out.print((double) v / sum + " ");
+				if (sum == 0) {
+					System.out.print("0.0 ");
+				} else {
+					System.out.print((double) v / sum + " ");
+				}
 				
 			}
 			System.out.println( "\n");
@@ -73,12 +95,15 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 	ArrayList<T> generate (int length)
 	{
 		ArrayList<T> newSequence = new ArrayList<T>();
-		
-//		for (int i=0; i<length; i++)
-//		{
-//			newSequence.add(generate());
-//			
-//		}
+		int rand = (int) (alphabet.size() * Math.random());
+		this.initToken = alphabet.get(rand);
+		for (int i=0; i<length; i++)
+		{
+			T newToken = generate(this.initToken);
+			if (newToken == null) break;
+			newSequence.add(newToken);
+
+		}
 		return newSequence;
 		
 	}
@@ -86,10 +111,13 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 	ArrayList<T> generate (int length, T initToken)
 	{
 		ArrayList<T> newSequence = new ArrayList<T>();
-//		for (int i=0; i<length; i++)
-//		{
-//			newSequence.add(generate());
-//		}
+		this.initToken = initToken;
+		for (int i=0; i<length; i++)
+		{
+			T newToken = generate(this.initToken);
+			if (newToken == null) break;
+			newSequence.add(newToken);
+		}
 		return newSequence;
 	}
 	
