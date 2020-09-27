@@ -1,5 +1,5 @@
 
-/* Date: Sep 4
+/* Date: Sep 21
  * 
  * Class: MidiFileToNotes
  * Description: Uses JMusic to get notes & info from a midi file

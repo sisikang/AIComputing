@@ -1,4 +1,4 @@
-//Programmer SisiKang
+
 //Date: Sep 21
 //Description: project 2 generating a melody 
 

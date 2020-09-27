@@ -1,6 +1,7 @@
 
-//Date: Sep 4
-//Description: project 1
+
+//Date: Sep 21
+//Description: project 2 generating a melody 
 
 import processing.core.*;
 
@@ -121,39 +122,39 @@ public class HelloWorldMidiMain extends PApplet {
 			System.out.println(list);
 		}
 		pg.norm();
-//		ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<>();
-//		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<>();
-//		pitchGenerator.train(midiNotesMary.getPitchArray());
-//		rhythmGenerator.train(midiNotesMary.getRhythmArray());
-//		if (key == '2') {
-//			player.reset();
-//			println("Melody started!");
-//
-//		}
-//		else if (key == '1')
-//		{
-//			//run your unit 1
-//			pitchGenerator.printProbabilityDistribution();
-//			rhythmGenerator.printProbabilityDistribution();
-//
-//
-//		} else if (key == '3') {
-//
-//			//run your unit 2
-//			System.out.println(pitchGenerator.generate(20));
-//			System.out.println(rhythmGenerator.generate(20));
-//		} else if (key == '4') {
-//			//run your unit 3
-//			ProbabilityGenerator<Integer> pitchProbDistGen  = new ProbabilityGenerator<>();
-//			ProbabilityGenerator<Double> rhythmProbDistGen = new ProbabilityGenerator<>();
-//			for (int i=0; i<100000; i++) {
-//				ArrayList<Integer> newPitch = pitchGenerator.generate(20);
-//				pitchProbDistGen.train(newPitch);
-//				ArrayList<Double> newRhythm = rhythmGenerator.generate(20);
-//				rhythmProbDistGen.train(newRhythm);
-//			}
-//			pitchProbDistGen.printProbabilityDistribution();
-//			rhythmProbDistGen.printProbabilityDistribution();
-//		}
+		ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<>();
+		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<>();
+		pitchGenerator.train(midiNotesMary.getPitchArray());
+		rhythmGenerator.train(midiNotesMary.getRhythmArray());
+		if (key == '2') {
+			player.reset();
+			println("Melody started!");
+
+		}
+		else if (key == '1')
+		{
+			//run your unit 1
+			pitchGenerator.printProbabilityDistribution();
+			rhythmGenerator.printProbabilityDistribution();
+
+
+		} else if (key == '3') {
+
+			//run your unit 2
+			System.out.println(pitchGenerator.generate(20));
+			System.out.println(rhythmGenerator.generate(20));
+		} else if (key == '4') {
+			//run your unit 3
+			ProbabilityGenerator<Integer> pitchProbDistGen  = new ProbabilityGenerator<>();
+			ProbabilityGenerator<Double> rhythmProbDistGen = new ProbabilityGenerator<>();
+			for (int i=0; i<100000; i++) {
+				ArrayList<Integer> newPitch = pitchGenerator.generate(20);
+				pitchProbDistGen.train(newPitch);
+				ArrayList<Double> newRhythm = rhythmGenerator.generate(20);
+				rhythmProbDistGen.train(newRhythm);
+			}
+			pitchProbDistGen.printProbabilityDistribution();
+			rhythmProbDistGen.printProbabilityDistribution();
+		}
 	}
 }
