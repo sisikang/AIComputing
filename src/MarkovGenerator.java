@@ -26,9 +26,13 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 			sum += correct_row.get(i);
 			pro[i+1] = pro[i] + correct_row.get(i);
 		}
+		if ( sum == 0) {
+			for (int i=0; i<alphabet_counts.size(); i++) {
+				sum += alphabet_counts.get(i);
+				pro[i+1] = pro[i] + alphabet_counts.get(i);
+			}
+		}
 		int rand = (int) (sum * Math.random());
-		//System.out.println("Sum=" + sum);
-		//System.out.println("rand=" + rand);
 		T newToken = null;
 		for (int i=0; i<correct_row.size(); i++) {
 			if (rand < pro[i+1]) {

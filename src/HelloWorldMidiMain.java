@@ -119,27 +119,35 @@ public class HelloWorldMidiMain extends PApplet {
 		MarkovGenerator<Integer> melodyGen_pitch  = new MarkovGenerator<>();
 		MarkovGenerator<Integer> ttGen_pitch   = new MarkovGenerator<>();
 		ProbabilityGenerator<Integer> firstNoteGen_pitch = new ProbabilityGenerator<>();
+		MarkovGenerator<Double> melodyGen_rhythm  = new MarkovGenerator<>();
+		MarkovGenerator<Double> ttGen_rhythm   = new MarkovGenerator<>();
+		ProbabilityGenerator<Double> firstNoteGen_rhythm = new ProbabilityGenerator<>();
 
 		firstNoteGen_pitch.train(midiNotesMary.getPitchArray());
 		melodyGen_pitch.train(midiNotesMary.getPitchArray());
-		for (int i=0; i<10000; i++) {
+		firstNoteGen_rhythm.train(midiNotesMary.getRhythmArray());
+		melodyGen_rhythm.train(midiNotesMary.getRhythmArray());
+		melodyGen_rhythm.alphabet_counts = new ArrayList<>(firstNoteGen_rhythm.alphabet_counts);
+		
+		if (key == '1') {
+			melodyGen_pitch.norm();
+			melodyGen_rhythm.norm();
+		} else if (key == '4') {
+					for (int i=0; i<10000; i++) {
 			int initToken = firstNoteGen_pitch.generate();
 			ttGen_pitch.train(melodyGen_pitch.generate(20, initToken));
 		}
 		ttGen_pitch.norm();
 		
-		MarkovGenerator<Double> melodyGen_rhythm  = new MarkovGenerator<>();
-		MarkovGenerator<Double> ttGen_rhythm   = new MarkovGenerator<>();
-		ProbabilityGenerator<Double> firstNoteGen_rhythm = new ProbabilityGenerator<>();
 
-		firstNoteGen_rhythm.train(midiNotesMary.getRhythmArray());
-		melodyGen_rhythm.train(midiNotesMary.getRhythmArray());
 		//melodyGen_rhythm.norm();
 		for (int i=0; i<10000; i++) {
 			double initToken = firstNoteGen_rhythm.generate();
 			ttGen_rhythm.train(melodyGen_rhythm.generate(20, initToken));
 		}
 		ttGen_rhythm.norm();
+		}
+
 //		ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<>();
 //		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<>();
 //		pitchGenerator.train(midiNotesMary.getPitchArray());
