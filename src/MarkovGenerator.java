@@ -1,4 +1,4 @@
-
+//Programmer:
 //Date: Sep 21
 //Description: project 2 generating a melody 
 
@@ -64,6 +64,7 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 				}
 				alphabet.add(newTokens.get(i));
 				
+				
 			}
 
 			//ok, now add the counts to the transition table
@@ -74,6 +75,8 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 			}
 			lastIndex = tokenIndex; //setting current to previous for next round
 		}
+		System.out.println(newTokens);
+		
 
 	}
 	
