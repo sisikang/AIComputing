@@ -1,6 +1,6 @@
-//Programmer: 
+//Programmer: Sisi Kang
 
-//Date: Sep 21
+//Date: Oct 7
 //Description: project 2 generating a melody 
 
 import processing.core.*;
