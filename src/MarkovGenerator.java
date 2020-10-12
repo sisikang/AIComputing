@@ -7,42 +7,47 @@ import java.util.ArrayList;
 
 public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 
-	ArrayList<ArrayList<Integer>> transitionTable = new ArrayList();
-	T initToken = null;
-	private int orderM;
+	ArrayList<ArrayList<Integer>> transitionTable = new ArrayList<>();
+	ArrayList<ArrayList<T>> uniqueAlphabetSequences = new ArrayList<>();
+	ProbabilityGenerator<T> e;
+	ArrayList<T> initSeq = null;
+	int orderM;
+	String type;
 
-	MarkovGenerator(){
-		
+	MarkovGenerator(String t, int M){
 		super();
-	}
+		type = t;
+		orderM = M;
+}
 
 	
-	T generate(T initToken) {
-		//System.out.println("init:" +initToken);
-		int tokenIndex = alphabet.indexOf(initToken);
-		ArrayList<Integer> correct_row = transitionTable.get(tokenIndex);
-		int[] pro = new int[correct_row.size()+1];
+	T generate(ArrayList<T> initSeq) {
+		int curSeqIndex = uniqueAlphabetSequences.indexOf(initSeq);
+		int[] pro = new int[transitionTable.get(0).size()+1];
 		int sum = 0;
-		for (int i=0; i<correct_row.size(); i++) {
-			sum += correct_row.get(i);
-			pro[i+1] = pro[i] + correct_row.get(i);
-		}
-		if ( sum == 0) {
-			for (int i=0; i<alphabet_counts.size(); i++) {
-				sum += alphabet_counts.get(i);
-				pro[i+1] = pro[i] + alphabet_counts.get(i);
+		if (curSeqIndex < 0) {
+			return e.generate();
+		} else {
+			ArrayList<Integer> correct_row = transitionTable.get(curSeqIndex);
+			for (int i=0; i<correct_row.size(); i++) {
+				sum += correct_row.get(i);
+				pro[i+1] = pro[i] + correct_row.get(i);
+			}
+			if ( sum == 0) {
+				return e.generate();
+			} else {
+				int rand = (int) (sum * Math.random());
+				T newToken = null;
+				for (int i=0; i<correct_row.size(); i++) {
+					if (rand < pro[i+1]) {
+						newToken = alphabet.get(i);
+						break;
+					}
+				}
+				return newToken;
 			}
 		}
-		int rand = (int) (sum * Math.random());
-		T newToken = null;
-		for (int i=0; i<correct_row.size(); i++) {
-			if (rand < pro[i+1]) {
-				newToken = alphabet.get(i);
-				break;
-			}
-		}
-		this.initToken = newToken;
-		return newToken;
+
 	}
 	
 	void train(ArrayList<T> newTokens)
@@ -112,9 +117,9 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 	}
 	System.out.println(newTokens);
 	}
+
 	
-
-
+		
 		/*
 		int lastIndex = -1;
 		for (int i=0; i < newTokens.size(); i++)
@@ -146,11 +151,11 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 		}
 		*/
 
-
-	
 	void norm() {
+		System.out.println(type + " for order "+ orderM +":");
+		System.out.println("                 "+alphabet);
 		for (int i=0; i<transitionTable.size(); i++) {
-			System.out.print(alphabet.get(i) + " ");
+			System.out.print(uniqueAlphabetSequences.get(i) + " ");
 			int sum = 0;
 			for (int v : transitionTable.get(i)) {
 				sum += v;
@@ -167,30 +172,31 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 		}
 	}
 
-	ArrayList<T> generate (int length)
+//	ArrayList<T> generate (int length)
+//	{
+//		ArrayList<T> newSequence = new ArrayList<T>();
+//		int rand = (int) (alphabet.size() * Math.random());
+//		this.initToken = alphabet.get(rand);
+//		for (int i=0; i<length; i++)
+//		{
+//			T newToken = generate(this.initToken);
+//			if (newToken == null) break;
+//			newSequence.add(newToken);
+//
+//		}
+//		return newSequence;
+//
+//	}
+//
+	ArrayList<T> generate (int length, ArrayList<T> initSeq)
 	{
 		ArrayList<T> newSequence = new ArrayList<T>();
-		int rand = (int) (alphabet.size() * Math.random());
-		this.initToken = alphabet.get(rand);
+		this.initSeq = initSeq;
 		for (int i=0; i<length; i++)
 		{
-			T newToken = generate(this.initToken);
-			if (newToken == null) break;
-			newSequence.add(newToken);
-
-		}
-		return newSequence;
-		
-	}
-	
-	ArrayList<T> generate (int length, T initToken)
-	{
-		ArrayList<T> newSequence = new ArrayList<T>();
-		this.initToken = initToken;
-		for (int i=0; i<length; i++)
-		{
-			T newToken = generate(this.initToken);
-			if (newToken == null) break;
+			T newToken = generate(this.initSeq);
+			this.initSeq.remove(0);
+			this.initSeq.add(newToken);
 			newSequence.add(newToken);
 		}
 		return newSequence;

@@ -1,7 +1,7 @@
 
 /*
 
-//Date: Oct 7
+//Date: Oct 11
 //Description: project 2 generating a melody 
  * 
  */

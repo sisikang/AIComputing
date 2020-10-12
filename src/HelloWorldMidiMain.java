@@ -116,37 +116,92 @@ public class HelloWorldMidiMain extends PApplet {
 		// which line to read in --> this object only reads one line (or ie, voice or ie, one instrument)'s worth of data from the file
 		midiNotesMary.setWhichLine(0);
 
-		MarkovGenerator<Integer> melodyGen_pitch  = new MarkovGenerator<>();
-		MarkovGenerator<Integer> ttGen_pitch   = new MarkovGenerator<>();
+
 		ProbabilityGenerator<Integer> firstNoteGen_pitch = new ProbabilityGenerator<>();
-		MarkovGenerator<Double> melodyGen_rhythm  = new MarkovGenerator<>();
-		MarkovGenerator<Double> ttGen_rhythm   = new MarkovGenerator<>();
 		ProbabilityGenerator<Double> firstNoteGen_rhythm = new ProbabilityGenerator<>();
-
 		firstNoteGen_pitch.train(midiNotesMary.getPitchArray());
-		melodyGen_pitch.train(midiNotesMary.getPitchArray());
 		firstNoteGen_rhythm.train(midiNotesMary.getRhythmArray());
-		melodyGen_rhythm.train(midiNotesMary.getRhythmArray());
-		melodyGen_rhythm.alphabet_counts = new ArrayList<>(firstNoteGen_rhythm.alphabet_counts);
-		
-		if (key == '1') {
-			melodyGen_pitch.norm();
-			melodyGen_rhythm.norm();
-		} else if (key == '4') {
-					for (int i=0; i<10000; i++) {
-			int initToken = firstNoteGen_pitch.generate();
-			ttGen_pitch.train(melodyGen_pitch.generate(20, initToken));
-		}
-		ttGen_pitch.norm();
-		
 
-		//melodyGen_rhythm.norm();
-		for (int i=0; i<10000; i++) {
-			double initToken = firstNoteGen_rhythm.generate();
-			ttGen_rhythm.train(melodyGen_rhythm.generate(20, initToken));
+		MarkovGenerator<Integer>[] melodyGen_pitch = new MarkovGenerator[10];
+		MarkovGenerator<Double>[] melodyGen_rhythm  = new MarkovGenerator[10];
+		for (int i=1; i<=10; i++) {
+			melodyGen_pitch[i-1]  = new MarkovGenerator<>("Pitch",i);
+			melodyGen_pitch[i-1].train(midiNotesMary.getPitchArray());
+			melodyGen_pitch[i-1].e = firstNoteGen_pitch;
+			melodyGen_rhythm[i-1]  = new MarkovGenerator<>("Rhythm",i);
+			melodyGen_rhythm[i-1].train(midiNotesMary.getRhythmArray());
+			melodyGen_rhythm[i-1].e = firstNoteGen_rhythm;
 		}
-		ttGen_rhythm.norm();
+
+		MarkovGenerator<Integer>[] ttGen_pitch   = new MarkovGenerator[10];
+		MarkovGenerator<Double>[] ttGen_rhythm   = new MarkovGenerator[10];
+		Arrays.setAll(ttGen_pitch, i-> new MarkovGenerator<>("Pitch",i+1));
+		Arrays.setAll(ttGen_rhythm, i-> new MarkovGenerator<>("Rhythm",i+1));
+
+		if (key == '1') {
+			for (int i=0; i<10; i++) {
+				melodyGen_pitch[i].norm();
+			}
+			for (int i=0; i<10; i++) {
+				melodyGen_rhythm[i].norm();
+			}
+		} else if (key == '2') {
+			for (int n=0; n<10000; n++) {
+				ArrayList<Integer>[] initSeq_pitch = new ArrayList[10];
+				ArrayList<Double>[] initSeq_rhythm = new ArrayList[10];
+				Arrays.setAll(initSeq_pitch, i->new ArrayList<>());
+				Arrays.setAll(initSeq_rhythm, i->new ArrayList<>());
+				initSeq_pitch[0].add(firstNoteGen_pitch.generate());
+				initSeq_rhythm[0].add(firstNoteGen_rhythm.generate());
+				for (int i=1; i<10; i++) {
+					initSeq_pitch[i].addAll(initSeq_pitch[i-1]);
+					initSeq_pitch[i].add(melodyGen_pitch[i-1].generate(initSeq_pitch[i-1]));
+					initSeq_rhythm[i].addAll(initSeq_rhythm[i-1]);
+					initSeq_rhythm[i].add(melodyGen_rhythm[i-1].generate(initSeq_rhythm[i-1]));
+				}
+				for (int i=0; i<10; i++) {
+					ttGen_pitch[i].train(melodyGen_pitch[i].generate(20, initSeq_pitch[i]));
+					ttGen_rhythm[i].train(melodyGen_rhythm[i].generate(20, initSeq_rhythm[i]));
+				}
+			}
+			for (int i=0; i<10; i++) {
+				ttGen_pitch[i].norm();
+			}
+			for (int i=0; i<10; i++) {
+				ttGen_rhythm[i].norm();
+			}
 		}
+//		MarkovGenerator<Integer> melodyGen_pitch  = new MarkovGenerator<>();
+//		MarkovGenerator<Integer> ttGen_pitch   = new MarkovGenerator<>();
+//		ProbabilityGenerator<Integer> firstNoteGen_pitch = new ProbabilityGenerator<>();
+//		MarkovGenerator<Double> melodyGen_rhythm  = new MarkovGenerator<>();
+//		MarkovGenerator<Double> ttGen_rhythm   = new MarkovGenerator<>();
+//		ProbabilityGenerator<Double> firstNoteGen_rhythm = new ProbabilityGenerator<>();
+//
+//		firstNoteGen_pitch.train(midiNotesMary.getPitchArray());
+//		melodyGen_pitch.train(midiNotesMary.getPitchArray());
+//		firstNoteGen_rhythm.train(midiNotesMary.getRhythmArray());
+//		melodyGen_rhythm.train(midiNotesMary.getRhythmArray());
+//		melodyGen_rhythm.alphabet_counts = new ArrayList<>(firstNoteGen_rhythm.alphabet_counts);
+//
+//		if (key == '1') {
+//			melodyGen_pitch.norm();
+//			melodyGen_rhythm.norm();
+//		} else if (key == '4') {
+//					for (int i=0; i<10000; i++) {
+//			int initToken = firstNoteGen_pitch.generate();
+//			ttGen_pitch.train(melodyGen_pitch.generate(20, initToken));
+//		}
+//		ttGen_pitch.norm();
+//
+//
+//		//melodyGen_rhythm.norm();
+//		for (int i=0; i<10000; i++) {
+//			double initToken = firstNoteGen_rhythm.generate();
+//			ttGen_rhythm.train(melodyGen_rhythm.generate(20, initToken));
+//		}
+//		ttGen_rhythm.norm();
+//		}
 
 //		ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<>();
 //		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<>();
