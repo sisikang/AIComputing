@@ -1,7 +1,7 @@
 //Programmer: Sisi Kang
 
-//Date: Oct 7
-//Description: project 2 generating a melody 
+//Date: Oct 11
+//Description: project 3 generating a melody 
 
 import processing.core.*;
 
@@ -40,8 +40,8 @@ public class HelloWorldMidiMain extends PApplet {
 	public void setup() {
 		fill(120, 50, 240);
 		
-		ProbabilityGenerator<Integer> pitchGenerator = new ProbabilityGenerator<Integer> ();
-		ProbabilityGenerator<Double> rhythmGenerator = new ProbabilityGenerator<Double> ();
+		MarkovGenerator<Integer> pitchGenerator = new MarkovGenerator<Integer> (3);
+		MarkovGenerator<Double> rhythmGenerator = new MarkovGenerator<Double> (3);
 
 		// returns a url
 		String filePath = getPath("mid/gardel_por.mid");

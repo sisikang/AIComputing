@@ -2,7 +2,7 @@
 /*
 
 //Date: Oct 11
-//Description: project 2 generating a melody 
+//Description: project 3 generating a melody 
  * 
  */
 import themidibus.*;

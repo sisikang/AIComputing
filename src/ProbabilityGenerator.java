@@ -1,5 +1,5 @@
-//Programmer: Sisi Kang
-//Date: Oct 7
+//Programmer: 
+//Date: Oct 11
 //Description: project 3 generating a melody 
 
 
