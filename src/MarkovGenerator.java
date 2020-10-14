@@ -1,5 +1,5 @@
-//Programmer: 
-//Date: Oct 7
+//Programmer: Sisi Kang
+//Date: Oct 14
 //Description: project 3 generating a melody 
 
 import java.util.ArrayList;
@@ -14,9 +14,9 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 	int orderM;
 	String type;
 
-	MarkovGenerator(int M){
-		super();
-		//type = t;
+	MarkovGenerator(String t, int M){
+		super(); //inheritance
+		type = t; //print out rhythm and pitch
 		orderM = M;
 }
 
@@ -120,6 +120,7 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 		}
 		*/
 
+	//when key pressed, generator
 	void norm() {
 		System.out.println(type + " for order "+ orderM +":");
 		System.out.println("                 "+alphabet);
@@ -141,22 +142,13 @@ public class MarkovGenerator<T> extends ProbabilityGenerator<T> {
 		}
 	}
 
-//	ArrayList<T> generate (int length)
-//	{
-//		ArrayList<T> newSequence = new ArrayList<T>();
-//		int rand = (int) (alphabet.size() * Math.random());
-//		this.initToken = alphabet.get(rand);
-//		for (int i=0; i<length; i++)
-//		{
-//			T newToken = generate(this.initToken);
-//			if (newToken == null) break;
-//			newSequence.add(newToken);
-//
-//		}
-//		return newSequence;
-//
-//	}
-//
+	ArrayList<T> generate (int length)
+	{
+		int rand = (int) (uniqueAlphabetSequences.size() * Math.random());
+		ArrayList<T> initSeq = new ArrayList<T>(uniqueAlphabetSequences.get(rand));
+		return generate(length, initSeq);
+	}
+
 	ArrayList<T> generate (int length, ArrayList<T> initSeq)
 	{
 		ArrayList<T> newSequence = new ArrayList<T>();

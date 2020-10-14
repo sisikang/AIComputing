@@ -1,6 +1,6 @@
 //Programmer: Sisi Kang
 
-//Date: Oct 11
+//Date: Oct 14
 //Description: project 3 generating a melody 
 
 import processing.core.*;
@@ -39,9 +39,9 @@ public class HelloWorldMidiMain extends PApplet {
 	//doing all the setup stuff
 	public void setup() {
 		fill(120, 50, 240);
-		
-		MarkovGenerator<Integer> pitchGenerator = new MarkovGenerator<Integer> (3);
-		MarkovGenerator<Double> rhythmGenerator = new MarkovGenerator<Double> (3);
+
+		MarkovGenerator<Integer> pitchGenerator = new MarkovGenerator<Integer> ("Pitch", 3);
+		MarkovGenerator<Double> rhythmGenerator = new MarkovGenerator<Double> ("Rhythm", 3);
 
 		// returns a url
 		String filePath = getPath("mid/gardel_por.mid");
@@ -146,22 +146,20 @@ public class HelloWorldMidiMain extends PApplet {
 				melodyGen_rhythm[i].norm();
 			}
 		} else if (key == '2') {
+			ArrayList<Integer> initSeq_pitch = new ArrayList<>();
+			ArrayList<Double> initSeq_rhythm = new ArrayList<>();
 			for (int n=0; n<10000; n++) {
-				ArrayList<Integer>[] initSeq_pitch = new ArrayList[10];
-				ArrayList<Double>[] initSeq_rhythm = new ArrayList[10];
-				Arrays.setAll(initSeq_pitch, i->new ArrayList<>());
-				Arrays.setAll(initSeq_rhythm, i->new ArrayList<>());
-				initSeq_pitch[0].add(firstNoteGen_pitch.generate());
-				initSeq_rhythm[0].add(firstNoteGen_rhythm.generate());
+				initSeq_pitch.clear();
+				initSeq_rhythm.clear();
+				initSeq_pitch.add(firstNoteGen_pitch.generate());
+				initSeq_rhythm.add(firstNoteGen_rhythm.generate());
+				ttGen_pitch[0].train(melodyGen_pitch[0].generate(20, initSeq_pitch));
+				ttGen_rhythm[0].train(melodyGen_rhythm[0].generate(20, initSeq_rhythm));
 				for (int i=1; i<10; i++) {
-					initSeq_pitch[i].addAll(initSeq_pitch[i-1]);
-					initSeq_pitch[i].add(melodyGen_pitch[i-1].generate(initSeq_pitch[i-1]));
-					initSeq_rhythm[i].addAll(initSeq_rhythm[i-1]);
-					initSeq_rhythm[i].add(melodyGen_rhythm[i-1].generate(initSeq_rhythm[i-1]));
-				}
-				for (int i=0; i<10; i++) {
-					ttGen_pitch[i].train(melodyGen_pitch[i].generate(20, initSeq_pitch[i]));
-					ttGen_rhythm[i].train(melodyGen_rhythm[i].generate(20, initSeq_rhythm[i]));
+					initSeq_pitch.add(melodyGen_pitch[i-1].generate(initSeq_pitch));
+					initSeq_rhythm.add(melodyGen_rhythm[i-1].generate(initSeq_rhythm));
+					ttGen_pitch[i].train(melodyGen_pitch[i].generate(20, initSeq_pitch));
+					ttGen_rhythm[i].train(melodyGen_rhythm[i].generate(20, initSeq_rhythm));
 				}
 			}
 			for (int i=0; i<10; i++) {
